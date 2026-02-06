@@ -16,12 +16,13 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             Expanded(
-              child: RiveAnimation.asset('animated_login_bear.riv')
-            )
+              child: RiveAnimation.asset(
+                'assets/animated_login_bear.riv',
+              ),
+            ),
           ],
-        )
-      )
-
+        ),
+      ),
     );
   }
 }
