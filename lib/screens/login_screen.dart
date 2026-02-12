@@ -9,20 +9,25 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  
-  //Variable de control para mostrar/ocultar la contraseña
   bool _obscureText = true;
+
+  // crear el cerebro de la animacion
+  StateMachineController? _controller;
+  //SMI: State Machine Input
+  SMIBool? _isChecking;
+  SMIBool? _isHandsUp;
+  SMITrigger? _trigSuccess;
+  SMITrigger? _trigFail;
 
   @override
   Widget build(BuildContext context) {
-
-    //Para obtener el tamaño de la pantalla
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      //Evita que se quite espacio del nudge
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
               SizedBox(
@@ -30,52 +35,78 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 200,
                 child: RiveAnimation.asset(
                   'assets/animated_login_bear.riv',
+                  stateMachines: const ['Login Machine'],
+                  //Al iniciar la animacion
+                  onInit: (artboard) {
+                    _controller = StateMachineController.fromArtboard(
+                      artboard,
+                      'Login Machine',
+                    );
+
+                    //verifica que inicio bien
+                    if (_controller == null) return;
+                    // agrega el controlador al tablero/escenario
+                    artboard.addController(_controller!);
+                    _isChecking = _controller!.findSMI('isChecking') as SMIBool?;
+                    _isHandsUp = _controller!.findSMI('isHandsUp') as SMIBool?;
+                    _trigSuccess = _controller!.findSMI('trigSuccess') as SMITrigger?;
+                    _trigFail = _controller!.findSMI('trigFail') as SMITrigger?;
+                  },
+                  fit: BoxFit.contain,
                 ),
               ),
-          
-              //Para separacion
-              const SizedBox(height: 10),
+              const SizedBox(height: 24),
               TextField(
-          
-                //Para mostrar un tipo de teclado
-                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) {
+                  if (_isHandsUp != null) {
+                    //No tapes los ojos al ver email
+                    _isHandsUp!.change(false);
+                  
+                  }
+                  //Si isChecking no es nulo
+                  if (_isChecking == null) return;
+                  // activar el modo chismoso
+                  _isChecking!.change(true);
+
+                },
                 decoration: InputDecoration(
-                  hintText:'Email',
+                  hintText: 'Email',
                   prefixIcon: const Icon(Icons.email),
                   border: OutlineInputBorder(
-                    //Para redondear los bordes
-                    borderRadius: BorderRadius.circular(12)
-                  )
-          
-                )
-              ), 
-              const SizedBox(height: 10),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               TextField(
-                
-                obscureText: _obscureText, 
+                obscureText: _obscureText,
+                onChanged: (value) {
+                  if (_isChecking != null) {
+                    _isChecking!.change(false);
+                  }
+                  if (_isHandsUp != null) {
+                    _isHandsUp!.change(true);
+                  }
+                },
                 decoration: InputDecoration(
-                  hintText: 'Password', 
+                  hintText: 'Password',
                   prefixIcon: const Icon(Icons.lock),
-                //Boton para visualizar la contraseña
-                  suffixIcon: IconButton( 
-                    //If ternario
+                  suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
                     ),
                     onPressed: () {
-                      //Refresca el icono
                       setState(() {
                         _obscureText = !_obscureText;
-                      }); 
+                      });
                     },
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                  )
-                  
+                  ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
             ],
           ),
         ),
