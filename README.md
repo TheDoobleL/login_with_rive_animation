@@ -86,7 +86,7 @@ This separation keeps the app organized and modular.
 
 Below is a demonstration of the full login interaction:
 
-(Insert GIF here showing full functionality: focus changes, typing, error reaction, and success reaction.)
+![App Demo](demo.gif)
 
 📘 Course Information
 
