@@ -86,7 +86,7 @@ This separation keeps the app organized and modular.
 
 Below is a demonstration of the full login interaction:
 
-![App Demo](demo.gif)
+![App Demo](assets/demo.gif)
 
 📘 Course Information
 
