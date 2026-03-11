@@ -254,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //Toma todo el ancho disponible
                 minWidth: size.width,
                 height: 50,
-                color: Colors.redAccent,
+                color: Colors.blueAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
